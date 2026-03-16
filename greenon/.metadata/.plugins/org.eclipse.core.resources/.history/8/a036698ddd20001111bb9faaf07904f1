@@ -1,0 +1,12 @@
+package org.greenon.dto;
+
+public class QnaListResponse {
+	private Long qnaNo;
+	private String categoryName;
+	private String title;
+	private String id;
+	private Integer pNo;
+	private String qnaStatus;
+	private Boolean isSecret;
+	private LocalDateTime inquiryDate;
+	}

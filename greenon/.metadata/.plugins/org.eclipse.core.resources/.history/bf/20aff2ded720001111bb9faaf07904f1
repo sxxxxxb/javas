@@ -1,0 +1,13 @@
+package org.greenon.dto;
+@Getter
+public class Qna {
+	private String title;
+	private String inquiryContent;
+	private boolean isSecret;
+	private Integer pNo;
+	private Integer payNo;
+	private Integer orderNo;
+	private Integer qnaDetailNo;
+	}
+	
+}

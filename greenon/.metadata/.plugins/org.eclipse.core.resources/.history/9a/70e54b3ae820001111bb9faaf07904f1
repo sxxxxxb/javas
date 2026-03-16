@@ -1,0 +1,15 @@
+package org.greenon.config;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+@SpringBootApplication
+@EnableDiscoveryClient // 유레카 서버에 나를 등록하겠다!
+@EnableFeignClients    // 다른 마이크로서비스를 호출하겠다!
+public class QnaServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(QnaServiceApplication.class, args);
+    }
+}

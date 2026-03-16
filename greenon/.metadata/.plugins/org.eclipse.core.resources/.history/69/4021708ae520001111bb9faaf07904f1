@@ -1,0 +1,23 @@
+server:
+  port: 30200
+
+spring:
+  application:
+    name: qna-service
+
+  datasource:
+    url: jdbc:mysql://localhost:8080/greenon
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://192.168.0.15:8761/eureka/

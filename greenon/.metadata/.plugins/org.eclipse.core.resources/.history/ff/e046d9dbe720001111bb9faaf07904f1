@@ -1,0 +1,5 @@
+package org.greenon.config;
+
+public class WebConfig {
+
+}

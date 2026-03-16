@@ -1,0 +1,107 @@
+package org.greenon.sql;
+
+public interface FaqSql {
+
+	// 카테고리
+	String SELECT_CATEGORI = "\r\n" + "SELECT qna_category_no, category_name, is_admin_only \r\n"
+			+ "FROM qna_categories";
+
+	String SELECT_CATEGORY_DETAIL = "SELECT qna_detail_no, detail_name \r\n" + "FROM qna_categories_details \r\n"
+			+ "WHERE qna_category_no = :categoryId";
+
+	// 상품 상세페이지 하단 qna 목록
+	String SELECT_FAQ_PRODUCT = "\r\n" + "SELECT \r\n" + "    q.qna_no, \r\n" + "    c.category_name, \r\n"
+			+ "    d.detail_name,  \r\n" + "    q.title, \r\n" + "    q.user_id,  \r\n" + "    q.p_no,  \r\n"
+			+ "    q.qna_status, \r\n" + "    q.is_secret, \r\n" + "    q.inquiry_date\r\n" + "FROM qna q\r\n"
+			+ "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "JOIN qna_categories c ON d.qna_category_no = c.qna_category_no\r\n" + "WHERE q.p_no = :productId\r\n"
+			+ "ORDER BY q.qna_no DESC\r\n" + "LIMIT :limit OFFSET :offset";
+
+	// 단건조회
+	String SELECT_FAQ = "SELECT \r\n" + "    q.qna_no, q.title, q.inquiry_content, q.inquiry_date,\r\n"
+			+ "    q.answer_content, q.answer_date, q.qna_status, q.is_secret,\r\n"
+			+ "    q.id, q.answerer_id, q.p_no, q.pay_no, q.order_no,\r\n" + "    c.category_name, d.detail_name\r\n"
+			+ "FROM qna q\r\n" + "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "JOIN qna_categories c ON d.qna_category_no = c.qna_category_no\r\n" + "WHERE q.qna_no = :qnaId";
+	// 단건조회 사진
+	String FAQ_PHOTO = "\r\n" + "SELECT qna_photo_no, photo_url, upload_date\r\n" + "FROM qna_photo\r\n"
+			+ "WHERE qna_no = :qnaId";
+
+	// 구매자 마이페이지 문의내역
+	String SELECT_FAQ_MYPAGE = "SELECT \r\n" + "    q.qna_no, \r\n" + "    q.p_no,\r\n" + "    c.category_name,\r\n"
+			+ "    q.title,\r\n" + "    q.qna_status,\r\n" + "    q.inquiry_date\r\n" + "FROM qna q\r\n"
+			+ "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "JOIN qna_categories c ON d.qna_category_no = c.qna_category_no\r\n" + "WHERE q.id = :id\r\n"
+			+ "ORDER BY q.qna_no DESC\r\n" + "LIMIT :limit OFFSET :offset";
+
+	// 구매자 문의글 작성
+	String ADD_FAQ = "\r\n" + "INSERT INTO qna (\r\n"
+			+ "    title, inquiry_content, is_secret, id, p_no, pay_no, order_no, qna_detail_no\r\n" + ") VALUES (\r\n"
+			+ "    :title, :inquiryContent, :isSecret, :id, :pNo, :payNo, :orderNo, :qnaDetailNo\r\n" + ");\r\n"
+			+ "\r\n" + "\r\n" + "INSERT INTO qna_photo (qna_no, photo_url) \r\n" + "VALUES (:qnaNo, :photoUrl)";
+
+	// 구매자 문의글 수정
+	String MODIFY_FAQ = "UPDATE qna \r\n" + "SET \r\n" + "    title = :title, \r\n"
+			+ "    inquiry_content = :inquiryContent, \r\n" + "    is_secret = :isSecret\r\n"
+			+ "WHERE qna_no = :qnaNo \r\n" + "  AND user_id = :userId \r\n" + "  AND qna_status = 'WAITING'";
+
+	// 구매자 문의글 삭제 사진먼저
+	String DELETE_FAQ_PHOTO = "DELETE FROM qna_photo WHERE qna_no = :qnaNo";
+	// 구매자 문의글 삭제
+	String DELETE_FAQ = "\r\n" + "DELETE FROM qna \r\n" + "WHERE qna_no = :qnaNo \r\n" + "  AND user_id = :userId \r\n"
+			+ "  AND qna_status = 'WAITING'";
+
+	// ============================ SELLER ================================
+	// 판매자페이지 추가할지말지 고민중
+	String SELECT_FAQ_SELLER = "\r\n" + "SELECT \r\n" + "    q.qna_no, \r\n" + "    q.p_no, \r\n" + "    q.title, \r\n"
+			+ "    q.user_id, \r\n" + "    q.inquiry_date, \r\n" + "    q.qna_status\r\n" + "FROM qna q\r\n"
+			+ "WHERE q.p_no IN (:pNoList)\r\n" + "  AND q.qna_status = 'WAITING'\r\n" + "ORDER BY q.qna_no DESC\r\n"
+			+ "LIMIT :limit OFFSET :offset";
+
+	// 내상품 문의 내역 [중복?]
+	String SELECT_FAQ_SELLER_A = "SELECT \r\n"
+			+ "    q.qna_no, d.detail_name, q.title, q.user_id, q.inquiry_date, q.qna_status\r\n" + "FROM qna q\r\n"
+			+ "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "WHERE q.p_no IN (:pNoList) \r\n" + "  AND q.qna_status = :status \r\n" + "ORDER BY q.qna_no DESC\r\n"
+			+ "LIMIT :limit OFFSET :offset";
+
+	// 문의글 상세 보기
+	String SELECT_FAQ_SELLER_PRODUCT = "\r\n" + "SELECT \r\n" + "    q.*, c.category_name, d.detail_name \r\n"
+			+ "FROM qna q\r\n" + "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "JOIN qna_categories c ON d.qna_category_no = c.qna_category_no\r\n" + "WHERE q.qna_no = :qnaNo";
+	// 해당 문의글 사진 목록
+	String SELECT_FAQ_SELLER_PRODUCT_PHOTO = "SELECT photo_url FROM qna_photo WHERE qna_no = :qnaNo";
+
+	// 답변
+	String ANSWER_FAQ = "UPDATE qna \r\n" + "SET \r\n" + "    answer_content = :answerContent,\r\n"
+			+ "    answer_date = CURRENT_TIMESTAMP,\r\n" + "    answerer_id = :sellerId,\r\n"
+			+ "    qna_status = 'COMPLETED'\r\n" + "WHERE qna_no = :qnaNo";
+	// 답변삭제
+	String DELETE_ANSWER = "UPDATE qna \r\n" + "SET \r\n" + "    answer_content = NULL,\r\n"
+			+ "    answer_date = NULL,\r\n" + "    answerer_id = NULL,\r\n" + "    qna_status = 'WAITING'\r\n"
+			+ "WHERE qna_no = :qnaNo \r\n" + "  AND answerer_id = :sellerId";
+
+	// ============================ SELLER ================================
+
+	// ============================ ADMIN ================================
+	// 관리자* 전체 목록조회
+	String SELECT_ALL_ADMIN = "SELECT \r\n"
+			+ "    q.qna_no, c.category_name, q.title, q.user_id, q.p_no, q.qna_status, q.inquiry_date\r\n"
+			+ "FROM qna q\r\n" + "JOIN qna_categories_details d ON q.qna_detail_no = d.qna_detail_no\r\n"
+			+ "JOIN qna_categories c ON d.qna_category_no = c.qna_category_no\r\n" + "ORDER BY q.qna_no DESC\r\n"
+			+ "LIMIT :limit OFFSET :offset";
+
+	// 관리자* 강제 삭제
+	String DELETE_ADMIN = "\r\n" + "UPDATE qna \r\n" + "SET qna_status = 'DELETED' \r\n" + "WHERE qna_no = :qnaId";
+
+	// 관리자* 문의유형 추가
+	String ADD_CATEGORY = "\r\n" + "INSERT INTO qna_categories (category_name, is_admin_only) \r\n"
+			+ "VALUES (:categoryName, :isAdminOnly)";
+
+	String MODIFY_CATEGORY = "\r\n" + "UPDATE qna_categories \r\n" + "SET category_name = :categoryName \r\n"
+			+ "WHERE qna_category_no = :categoryId";
+
+	String DELETE_CATEGORY = "\r\n" + "DELETE FROM qna_categories WHERE qna_category_no = :categoryId";
+
+	// ============================ ADMIN ================================
+}

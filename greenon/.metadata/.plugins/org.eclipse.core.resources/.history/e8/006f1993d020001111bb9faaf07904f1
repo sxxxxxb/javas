@@ -1,0 +1,5 @@
+package org.greenon.sql;
+
+public interface FaqSql {
+
+}

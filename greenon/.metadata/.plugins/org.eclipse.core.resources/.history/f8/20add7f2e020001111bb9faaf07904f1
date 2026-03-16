@@ -1,0 +1,51 @@
+package org.greenon.controller;
+
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+@RestController
+@RequestMapping("/api/buyer/qnas")
+@RequiredArgsConstructor
+public class BuyerQnaController {
+
+	private final QnaService qnaService;
+
+	@PostMapping
+	public ResponseEntity<Void> createQna(@RequestHeader("X-User-Id") String userId,  
+			@RequestBody CreateQnaRequest request) {
+
+		qnaService.createQna(request, userId);
+		return ResponseEntity.status(HttpStatus.CREATED).build(); 
+	}
+
+	// 2. 내 문의 목록 조회 (R)
+	@GetMapping
+	public ResponseEntity<List<QnaListResponse>> getMyQnaList(@RequestHeader("X-User-Id") String userId,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+
+		List<QnaListResponse> response = qnaService.getMyQnaList(userId, page, size);
+		return ResponseEntity.ok(response); // 200 OK 반환
+	}
+
+	// 3. 내 문의글 수정 (U)
+	@PutMapping("/{qnaNo}")
+	public ResponseEntity<Void> updateQna(@PathVariable Long qnaNo, @RequestHeader("X-User-Id") String userId,
+			@RequestBody QnaUpdateRequest request) {
+
+		qnaService.updateQna(qnaNo, request, userId);
+		return ResponseEntity.ok().build(); // 200 OK 반환
+	}
+
+	// 4. 내 문의글 삭제 (D)
+	@DeleteMapping("/{qnaNo}")
+	public ResponseEntity<Void> deleteQna(@PathVariable Long qnaNo, @RequestHeader("X-User-Id") String userId) {
+
+		qnaService.deleteQna(qnaNo, userId);
+		return ResponseEntity.noContent().build(); // 204 No Content 반환 (데이터가 깔끔하게 지워짐을 의미)
+	}
+}

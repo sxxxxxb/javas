@@ -1,0 +1,20 @@
+package org.greenon.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class Qna {
+	private String title;
+	private String inquiryContent;
+	private boolean isSecret;
+	private Integer pNo;
+	private Integer payNo;
+	private Integer orderNo;
+	private Integer qnaDetailNo;
+	}
+	
+}

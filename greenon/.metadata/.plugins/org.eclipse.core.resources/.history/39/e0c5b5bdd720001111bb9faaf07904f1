@@ -1,0 +1,5 @@
+package org.greenon.dto;
+
+public class Qna {
+
+}
